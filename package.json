@@ -1,0 +1,29 @@
+{
+  "name": "schoolsapi",
+  "version": "1.0.0",
+  "description": "API for schools data",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js", 
+    "dev": "nodemon index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/carolwargo/schoolsapi.git"
+  },
+  "keywords": ["schools", "API", "education"],
+  "author": "Carol Wargo",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/carolwargo/schoolsapi/issues"
+  },
+  "homepage": "https://github.com/carolwargo/schoolsapi#readme",
+  "dependencies": {
+    "express": "^4.17.1", 
+    "cors": "^2.8.5",
+    "mongoose": "^5.10.9",
+    "nodemon": "^2.0.7"
+  }
+}
