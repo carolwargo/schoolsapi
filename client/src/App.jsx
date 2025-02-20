@@ -1,45 +1,52 @@
-import { useEffect, useState } from "react";
+// App.jsx
+
+import React, { useEffect, useState } from 'react';
 
 const App = () => {
-  const [schools, setSchools] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [members, setMembers] = useState([]);
+  const [error, setError] = useState(null);
 
+  // Fetch data when the component mounts
   useEffect(() => {
-    fetch("http://localhost:5000/api/schoolsapi")
-      .then((response) => response.json())
-      .then((data) => {
-        setSchools(data);
-        setLoading(false);
-      })
-      .catch((error) => console.error("Error fetching data:", error));
+    const fetchMemberList = async () => {
+      try {
+        const response = await fetch('/api/directory/memberList?type=12&division=III');
+
+        // Check if response is OK and content type is JSON
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+
+        // Check if the response content type is JSON
+        const contentType = response.headers.get('Content-Type');
+        if (!contentType || !contentType.includes('application/json')) {
+          throw new Error('Expected JSON response, but got something else');
+        }
+
+        // Parse the JSON data
+        const data = await response.json();
+        setMembers(data);  // Update the state with the fetched data
+      } catch (error) {
+        console.error('Error fetching data:', error);
+        setError('Failed to fetch data.');
+      }
+    };
+
+    fetchMemberList();
   }, []);
 
   return (
-    <div className="bg-gray-100 min-h-screen flex flex-col items-center p-5">
-      <h1 className="text-3xl font-bold text-blue-600 mb-5">NCAA Division III Schools</h1>
-      {loading ? (
-        <p className="text-gray-700">Loading...</p>
+    <div>
+      <h1>Member List</h1>
+      {error && <p>{error}</p>}  {/* Show error if there's an issue */}
+      {members.length > 0 ? (
+        <ul>
+          {members.map((member, index) => (
+            <li key={index}>{member.name}</li> 
+          ))}
+        </ul>
       ) : (
-        <div className="w-full max-w-4xl bg-white p-4 shadow-lg rounded-lg">
-          <table className="table-auto w-full border-collapse border border-gray-200">
-            <thead>
-              <tr className="bg-blue-500 text-white">
-                <th className="border px-4 py-2">ID</th>
-                <th className="border px-4 py-2">School Name</th>
-                <th className="border px-4 py-2">State</th>
-              </tr>
-            </thead>
-            <tbody>
-              {schools.map((school, index) => (
-                <tr key={index} className="hover:bg-gray-100">
-                  <td className="border px-4 py-2">{school.memberId}</td>
-                  <td className="border px-4 py-2">{school.name}</td>
-                  <td className="border px-4 py-2">{school.state}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+        <p>Loading...</p>  
       )}
     </div>
   );
